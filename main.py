@@ -1,5 +1,4 @@
 import requests
-import os
 import json
 from flask import Flask, request, abort
 
@@ -8,10 +7,8 @@ app = Flask(__name__)
 
 def get_user(domain, user):
     wakatime_url = "https://{}/api/v1/users/{}/stats".format(domain, user)
-    wakatime_key = os.environ.get("WAKATIME_KEY")
 
     headers = {
-        "Authorization": "Bearer {}".format(wakatime_key),
         "Content-Type": "application/json",
     }
 
