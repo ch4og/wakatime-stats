@@ -44,9 +44,14 @@ def get_total(domain, user):
         print("Error: {}".format(response.text))
 
     data = response.json()["data"]
+    langs = data["languages"]
+    for lang in langs:
+        if lang["name"] == "unknown":
+            unknown = lang["total_seconds"]
+            break
 
     result = {}
-    total_seconds = data["total_seconds"]
+    total_seconds = data["total_seconds"] - unknown
     result["total"] = f"{int(total_seconds/3600)}h {int(total_seconds%3600/60)}m"
 
     return result
