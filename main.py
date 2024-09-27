@@ -17,7 +17,8 @@ def get_user(domain, user):
     if response.status_code != 200:
         print("Error: {}".format(response.text))
 
-    langs = response.json()["data"]["languages"]
+    data = response.json()["data"]
+    langs = data["languages"]
 
     result = {}
     for lang in langs:
@@ -30,11 +31,39 @@ def get_user(domain, user):
     return result
 
 
+def get_total(domain, user):
+    wakatime_url = "https://{}/api/v1/users/{}/stats".format(domain, user)
+
+    headers = {
+        "Content-Type": "application/json",
+    }
+
+    response = requests.get(wakatime_url, headers=headers)
+
+    if response.status_code != 200:
+        print("Error: {}".format(response.text))
+
+    data = response.json()["data"]
+
+    result = {}
+    total_seconds = data["total_seconds"]
+    result["total"] = f"{int(total_seconds/3600)}h {int(total_seconds%3600/60)}m"
+
+    return result
+
+
 @app.route("/")
 def index():
     username = request.args.get("user")
     domain = request.args.get("domain")
-    if username and domain:
+    total = request.args.get("total")
+    if username and domain and total:
+        if total == "true":
+            total = get_total(domain, username)
+            return json.dumps(total)
+        else:
+            abort(403)
+    elif username and domain:
         stats = get_user(domain, username)
         return json.dumps(stats)
     else:
