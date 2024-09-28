@@ -25,7 +25,7 @@ def get_user(domain, user):
         if lang["name"] != "unknown":
             digital = lang["digital"]
             hours, minutes, seconds = digital.split(":")
-            time = f"{int(hours)}h {int(minutes)}m {int(seconds)}s"
+            time = f"{int(hours)}h {int(minutes)}m"
             result[lang["name"]] = time
 
     return result
