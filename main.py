@@ -21,8 +21,9 @@ def get_user(domain, user):
     langs = data["languages"]
 
     result = {}
+    stoplist = ["unknown", "markdown", "json", "yaml", "text", "xml", "css"]
     for lang in langs:
-        if lang["name"] != "unknown":
+        if lang["name"].lower() not in stoplist:
             digital = lang["digital"]
             hours, minutes, seconds = digital.split(":")
             time = f"{int(hours)}h {int(minutes)}m"
